@@ -1,0 +1,7 @@
+D:\Project-work\FastCustom\FastCustom\bin\Release\FastCustom.exe.config
+D:\Project-work\FastCustom\FastCustom\bin\Release\FastCustom.exe
+D:\Project-work\FastCustom\FastCustom\bin\Release\FastCustom.pdb
+D:\Project-work\FastCustom\FastCustom\obj\Release\FastCustom.csprojResolveAssemblyReference.cache
+D:\Project-work\FastCustom\FastCustom\obj\Release\FastCustom.csproj.CoreCompileInputs.cache
+D:\Project-work\FastCustom\FastCustom\obj\Release\FastCustom.exe
+D:\Project-work\FastCustom\FastCustom\obj\Release\FastCustom.pdb

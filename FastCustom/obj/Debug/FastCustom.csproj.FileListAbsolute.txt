@@ -1,0 +1,10 @@
+D:\Project-work\FastCustom\FastCustom\bin\Debug\FastCustom.exe.config
+D:\Project-work\FastCustom\FastCustom\bin\Debug\FastCustom.exe
+D:\Project-work\FastCustom\FastCustom\bin\Debug\FastCustom.pdb
+D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.csprojResolveAssemblyReference.cache
+D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.csproj.CoreCompileInputs.cache
+D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.exe
+D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.pdb
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.exe.config
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.exe
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.pdb
