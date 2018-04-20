@@ -78,7 +78,6 @@ namespace FastCustom
                         if (j == 1)
                         if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
                         //add useful things here!  
-                        //File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000",
                         //    string.Format("(:217 0:1680 {0}:)", xlRange.Cells[i, j].Value2.ToString()));
                         vagonsList.Add(xlRange.Cells[i, j].Value2.ToString());
                     }
@@ -91,7 +90,7 @@ namespace FastCustom
                     {
                         File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000", string.Format("(:217 0:1680 {0}:)", container));
                         Console.WriteLine("Now processing: {0}", container);
-                        System.Threading.Thread.Sleep(8500);
+                        System.Threading.Thread.Sleep(9500);
                     }
                     else
                     {
