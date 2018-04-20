@@ -105,8 +105,7 @@ namespace FastCustom
                         {
                             break;
                         }
-                        string answerFileName = "01" + 11 + "2400";
-                        //string answerFileName = "01" + 15 + "2400"; //15й порт Левитан, 11 мой
+                        string answerFileName = "01" + 11 /*15й порт Левитан, 11 мой*/ + "2400"; 
                         DirectoryInfo dirConcentratorPath = new DirectoryInfo(ConfigurationManager.AppSettings["answerFolder"]);
                         FileInfo[] fileInDir = dirConcentratorPath.GetFiles(answerFileName + "*.*");
                         foreach (FileInfo foundFile in fileInDir)
@@ -162,7 +161,7 @@ namespace FastCustom
                                         var otpravka = matchList[5].Value;
                                         if (results.Count == 6)
                                         {
-                                            sheet.Cells[i + 2, 1].Value = container; //выводим в столбик название контейнеров
+                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
                                             sheet.Cells[i + 2, 2].Value = station;
                                             sheet.Cells[i + 2, 3].Value = operation;
                                             sheet.Cells[i + 2, 4].Value = dateOfOperation;
@@ -170,16 +169,14 @@ namespace FastCustom
                                             sheet.Cells[i + 2, 6].Value = state;
                                             sheet.Cells[i + 2, 7].Value = otpravka;
                                             string noinfo = "-";
-                                            sheet.Cells[i + 1, 8].Value = noinfo;
-                                            //sheet.Cells[i + 1, 9].Value = noinfo;
+                                            sheet.Cells[i + 2, 8].Value = noinfo;
                                         }
                                         else
                                         {
                                             var vagon = matchList[6].Value;
-                                            //var index = matchList[7].Value;
-                                            //sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
+
                                             #endregion
-                                            sheet.Cells[i + 2, 1].Value = container; //выводим в столбик название контейнеров
+                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
                                             sheet.Cells[i + 2, 2].Value = station;
                                             sheet.Cells[i + 2, 3].Value = operation;
                                             sheet.Cells[i + 2, 4].Value = dateOfOperation;
@@ -200,7 +197,7 @@ namespace FastCustom
                         }
                     }
                     #region Formatting excel
-                    var formatTable = vagonsList.Count + 1; // костыль, чтобы последняя строка тоже получила форматирование
+                    var formatTable = vagonsList.Count + 1; // fix applying formatting for last string
                     sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter; //выравнивание по центру
                                                                                                                                                                   //sheet.get_Range("E2", string.Format("E{0}", col2Items.Count)).NumberFormat = "hh";
 
@@ -217,7 +214,6 @@ namespace FastCustom
                         sheet.Columns.AutoFit(); // autofit
                         string reportName = inputFileName + " от " + DateTime.Now.ToString("dd.MM.yyyy, HH-mm");
                         workbook.SaveAs(ConfigurationManager.AppSettings["reportFolder"] + reportName + ".xlsx");
-                        //workbook.SaveAs(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + reportName + ".xlsx");
                         excel.Workbooks.Close();
                         excel.Quit();
                         Console.WriteLine("Processing file {0} is completed.", inputFileName);
@@ -246,6 +242,7 @@ namespace FastCustom
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
+            #region clean all excel processes again just in case 
             catch (Exception e)
             {
                 foreach (Process pr in prs)
@@ -254,8 +251,13 @@ namespace FastCustom
                     {
                         pr.Kill();
                     }
+                    if (pr.ProcessName == "FastCustom")
+                    {
+                        pr.Kill();
+                    }
                 }
             }
+            #endregion
         }
     }
 }
