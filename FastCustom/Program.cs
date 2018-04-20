@@ -27,6 +27,7 @@ namespace FastCustom
 
         public static void Run()
         {
+            #region kill any Excel process
             Process[] prs = Process.GetProcesses();
             foreach (Process pr in prs)
             {
@@ -35,13 +36,11 @@ namespace FastCustom
                     pr.Kill();
                 }
             }
-
+            #endregion
             try
             {
-                //Console.WriteLine("Console is working now...");
                 // Create a new FileSystemWatcher and set its properties.
                 FileSystemWatcher watcher = new FileSystemWatcher();
-                //watcher.Path = args[1];
                 watcher.Path = ConfigurationSettings.AppSettings["RootFolder"];
                 /* Watch for changes in LastAccess and LastWrite times, and
                    the renaming of files or directories. */
@@ -49,7 +48,6 @@ namespace FastCustom
                    | NotifyFilters.FileName | NotifyFilters.DirectoryName;
                 // Only watch text files.
                 watcher.Filter = "*.xls*";
-
                 // Add event handlers.
 
                 // Begin watching.
@@ -67,10 +65,10 @@ namespace FastCustom
                     inputFileName = Path.GetFileNameWithoutExtension(file);
                     ArrayList vagonsList = new ArrayList();
 
-                    Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application(); //создаем COM-объект Excel
-                    excel.Visible = false; //делаем объект невидимым
-                    excel.Workbooks.Add(Type.Missing); //добавляем книгу
-                    excel.SheetsInNewWorkbook = 1;//количество листов в книге
+                    Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application(); //create COM-object Excel
+                    excel.Visible = false; //make excel process invisible
+                    excel.Workbooks.Add(Type.Missing); //add workbook
+                    excel.SheetsInNewWorkbook = 1;//number of pages in workbook
                     Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks[1]; //получам ссылку на первую открытую книгу
                     Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Worksheets.get_Item(1);//получаем ссылку на первый лист
                     sheet.Name = "Report" + " " + DateTime.Now.ToString("dd.MM.yy");
@@ -89,10 +87,7 @@ namespace FastCustom
                         {
                             if (j == 1)
                                 if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
-                                    //Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
                                     //add useful things here!  
-                                    //File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000",
-                                    //    string.Format("(:217 0:1680 {0}:)", xlRange.Cells[i, j].Value2.ToString()));
                                     vagonsList.Add(xlRange.Cells[i, j].Value2.ToString());
                         }
                     }
@@ -104,7 +99,7 @@ namespace FastCustom
                         {
                             File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000", string.Format("(:217 0:1680 {0}:)", container));
                             Console.WriteLine("Now processing: {0}", container);
-                            System.Threading.Thread.Sleep(8500);
+                            System.Threading.Thread.Sleep(9500);
                         }
                         else
                         {
@@ -119,7 +114,7 @@ namespace FastCustom
                             string fullName = foundFile.FullName;
                             var lines = File.ReadAllLines(foundFile.FullName, Encoding.GetEncoding(866));
                             sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
-                            string text = ""; // переменная для поиска ключа в файле
+                            string text = ""; // search key variable
                             using (StreamReader sr = new StreamReader(foundFile.FullName, Encoding.GetEncoding(866)))
                             {
                                 text = sr.ReadToEnd();
@@ -139,7 +134,6 @@ namespace FastCustom
                                         sheet.Cells[i + 2, 6].Value = noinfo;
                                         sheet.Cells[i + 2, 7].Value = noinfo;
                                         sheet.Cells[i + 2, 8].Value = noinfo;
-                                        //sheet.Cells[i + 1, 9].Value = noinfo;
                                         break;
                                     }
                                     else
