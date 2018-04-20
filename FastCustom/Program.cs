@@ -77,7 +77,6 @@ namespace FastCustom
                     {
                         if (j == 1)
                         if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
-                            //Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
                         //add useful things here!  
                         //File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000",
                         //    string.Format("(:217 0:1680 {0}:)", xlRange.Cells[i, j].Value2.ToString()));

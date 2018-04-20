@@ -8,3 +8,6 @@ D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.pdb
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.exe.config
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.exe
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.pdb
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.exe
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.pdb
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.csprojResolveAssemblyReference.cache
