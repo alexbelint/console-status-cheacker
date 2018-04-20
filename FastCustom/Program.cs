@@ -26,10 +26,8 @@ namespace FastCustom
 
         public static void Run()
         {
-            //Console.WriteLine("Console is working now...");
             // Create a new FileSystemWatcher and set its properties.
             FileSystemWatcher watcher = new FileSystemWatcher();
-            //watcher.Path = args[1];
             watcher.Path = ConfigurationSettings.AppSettings["RootFolder"];
             /* Watch for changes in LastAccess and LastWrite times, and
                the renaming of files or directories. */
@@ -77,10 +75,6 @@ namespace FastCustom
                     {
                         if (j == 1)
                         if (xlRange.Cells[i, j] != null && xlRange.Cells[i, j].Value2 != null)
-                            //Console.Write(xlRange.Cells[i, j].Value2.ToString() + "\t");
-                        //add useful things here!  
-                        //File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000",
-                        //    string.Format("(:217 0:1680 {0}:)", xlRange.Cells[i, j].Value2.ToString()));
                         vagonsList.Add(xlRange.Cells[i, j].Value2.ToString());
                     }
                 }
@@ -107,7 +101,7 @@ namespace FastCustom
                         string fullName = foundFile.FullName;
                         var lines = File.ReadAllLines(foundFile.FullName, Encoding.GetEncoding(866));
                         sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
-                        string text = ""; // переменная для поиска ключа в файле
+                        string text = ""; //search key variable
                         using (StreamReader sr = new StreamReader(foundFile.FullName, Encoding.GetEncoding(866)))
                         {
                             text = sr.ReadToEnd();
@@ -127,7 +121,6 @@ namespace FastCustom
                                     sheet.Cells[i + 2, 6].Value = noinfo;
                                     sheet.Cells[i + 2, 7].Value = noinfo;
                                     sheet.Cells[i + 2, 8].Value = noinfo;
-                                    //sheet.Cells[i + 1, 9].Value = noinfo;
                                     break;
                                 }
                                 else
@@ -156,7 +149,7 @@ namespace FastCustom
                                     var otpravka = matchList[5].Value;
                                     if (results.Count == 6)
                                     {
-                                        sheet.Cells[i + 2, 1].Value = container; //выводим в столбик название контейнеров
+                                        sheet.Cells[i + 2, 1].Value = container; //show container name column
                                         sheet.Cells[i + 2, 2].Value = station;
                                         sheet.Cells[i + 2, 3].Value = operation;
                                         sheet.Cells[i + 2, 4].Value = dateOfOperation;
@@ -164,16 +157,13 @@ namespace FastCustom
                                         sheet.Cells[i + 2, 6].Value = state;
                                         sheet.Cells[i + 2, 7].Value = otpravka;
                                         string noinfo = "-";
-                                        sheet.Cells[i + 1, 8].Value = noinfo;
-                                        //sheet.Cells[i + 1, 9].Value = noinfo;
-                                    }
+                                        sheet.Cells[i + 2, 8].Value = noinfo;
+                                         }
                                     else
                                     {
-                                        var vagon = matchList[6].Value;
-                                        //var index = matchList[7].Value;
-                                        //sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
+                                        var vagon = matchList[6].Value;                                       
                                         #endregion
-                                        sheet.Cells[i + 2, 1].Value = container; //выводим в столбик название контейнеров
+                                        sheet.Cells[i + 2, 1].Value = container; //show container name column
                                         sheet.Cells[i + 2, 2].Value = station;
                                         sheet.Cells[i + 2, 3].Value = operation;
                                         sheet.Cells[i + 2, 4].Value = dateOfOperation;
@@ -181,7 +171,6 @@ namespace FastCustom
                                         sheet.Cells[i + 2, 6].Value = state;
                                         sheet.Cells[i + 2, 7].Value = otpravka;
                                         sheet.Cells[i + 2, 8].Value = vagon;
-
                                     }
                                 }
                                 else
@@ -194,11 +183,9 @@ namespace FastCustom
                     }
                 }
                 #region Formatting excel
-                var formatTable = vagonsList.Count + 1; // костыль, чтобы последняя строка тоже получила форматирование
-                sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter; //выравнивание по центру
-                                                                                                                                            //sheet.get_Range("E2", string.Format("E{0}", col2Items.Count)).NumberFormat = "hh";
-    
-
+                var formatTable = vagonsList.Count + 1; //last string formatting shit fix 
+                sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = 
+                    Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter; //aligment center
                 Microsoft.Office.Interop.Excel.Range chartRange;
                 chartRange = sheet.get_Range("a1", "h1");
                 foreach (Microsoft.Office.Interop.Excel.Range cells in chartRange.Cells)
@@ -211,7 +198,6 @@ namespace FastCustom
                     sheet.Columns.AutoFit(); // autofit
                     string reportName = inputFileName + " от " + DateTime.Now.ToString("dd.MM.yyyy, HH-mm");
                     workbook.SaveAs(ConfigurationManager.AppSettings["reportFolder"] + reportName + ".xlsx");
-                    //workbook.SaveAs(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + reportName + ".xlsx");
                     excel.Workbooks.Close();
                     excel.Quit();
                     Console.WriteLine("Processing file {0} is completed.", inputFileName);
