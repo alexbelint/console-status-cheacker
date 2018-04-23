@@ -174,7 +174,6 @@ namespace FastCustom
                                         else
                                         {
                                             var vagon = matchList[6].Value;
-
                                             #endregion
                                             sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
                                             sheet.Cells[i + 2, 2].Value = station;
@@ -184,7 +183,6 @@ namespace FastCustom
                                             sheet.Cells[i + 2, 6].Value = state;
                                             sheet.Cells[i + 2, 7].Value = otpravka;
                                             sheet.Cells[i + 2, 8].Value = vagon;
-
                                         }
                                     }
                                     else
@@ -198,10 +196,8 @@ namespace FastCustom
                     }
                     #region Formatting excel
                     var formatTable = vagonsList.Count + 1; // fix applying formatting for last string
-                    sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter; //выравнивание по центру
-                                                                                                                                                                  //sheet.get_Range("E2", string.Format("E{0}", col2Items.Count)).NumberFormat = "hh";
-
-
+                    sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = 
+                        Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter; //aligment center                                                                                                                                             
                     Microsoft.Office.Interop.Excel.Range chartRange;
                     chartRange = sheet.get_Range("a1", "h1");
                     foreach (Microsoft.Office.Interop.Excel.Range cells in chartRange.Cells)
@@ -217,7 +213,6 @@ namespace FastCustom
                         excel.Workbooks.Close();
                         excel.Quit();
                         Console.WriteLine("Processing file {0} is completed.", inputFileName);
-
                     }
                     catch (System.Runtime.InteropServices.COMException)
                     {
