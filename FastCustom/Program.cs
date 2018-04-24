@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -9,8 +9,6 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FastCustom
 {
@@ -158,9 +156,22 @@ namespace FastCustom
                                         DateTime dateOfOperation = Convert.ToDateTime(dt);
                                         string timeOfOperation = matchList[3].Value;
                                         var state = matchList[4].Value;
-                                        var otpravka = matchList[5].Value;
-                                        if (results.Count == 6)
+                                        if (results.Count == 5)
                                         {
+                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
+                                            sheet.Cells[i + 2, 2].Value = station;
+                                            sheet.Cells[i + 2, 3].Value = operation;
+                                            sheet.Cells[i + 2, 4].Value = dateOfOperation;
+                                            sheet.Cells[i + 2, 5].Value = timeOfOperation;
+                                            sheet.Cells[i + 2, 6].Value = state;
+                                            string noinfo = "-";
+                                            sheet.Cells[i + 2, 7].Value = noinfo;
+                                            sheet.Cells[i + 2, 8].Value = noinfo;
+                                        }
+
+                                        else if (results.Count == 6)
+                                        {
+                                            var otpravka = matchList[5].Value;
                                             sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
                                             sheet.Cells[i + 2, 2].Value = station;
                                             sheet.Cells[i + 2, 3].Value = operation;
@@ -173,6 +184,7 @@ namespace FastCustom
                                         }
                                         else
                                         {
+                                            var otpravka = matchList[5].Value;
                                             var vagon = matchList[6].Value;
                                             #endregion
                                             sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
@@ -251,6 +263,11 @@ namespace FastCustom
                         pr.Kill();
                     }
                 }
+                //this will use the "fileLogger" logger from our NLog.config file
+                Logger logger = LogManager.GetLogger("fileLogger");
+
+                //add custom message and pass in the exception
+                logger.Error(e, "Whoops!");
             }
             #endregion
         }

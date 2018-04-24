@@ -6,8 +6,9 @@ D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.csproj.CoreCompileInp
 D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.exe
 D:\Project-work\FastCustom\FastCustom\obj\Debug\FastCustom.pdb
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.exe.config
-C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.exe
-C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.pdb
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.exe
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\FastCustom.pdb
-C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.csprojResolveAssemblyReference.cache
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\NLog.dll
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Debug\NLog.xml
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.exe
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Debug\FastCustom.pdb
