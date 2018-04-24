@@ -16,9 +16,9 @@ namespace FastCustom
     {
         static void Main(string[] args)
         {
-            {
-                Run();
-            }
+           {
+             Run();
+           }
         }
         public static string inputFileName = string.Empty;
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -267,7 +267,7 @@ namespace FastCustom
                 Logger logger = LogManager.GetLogger("fileLogger");
 
                 //add custom message and pass in the exception
-                logger.Error(e, "Whoops!");
+                logger.Error(e, "My Lord, your code is like a shit!");
             }
             #endregion
         }
