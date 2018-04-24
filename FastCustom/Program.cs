@@ -67,7 +67,7 @@ namespace FastCustom
                     excel.Visible = false; //make excel process invisible
                     excel.Workbooks.Add(Type.Missing); //add workbook
                     excel.SheetsInNewWorkbook = 1;//number of pages in workbook
-                    Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks[1]; //получам ссылку на первую открытую книгу
+                    Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks[1]; //get link on 1st book
                     Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Worksheets.get_Item(1);//получаем ссылку на первый лист
                     sheet.Name = "Report" + " " + DateTime.Now.ToString("dd.MM.yy");
                     sheet.Cells[1, 1] = "№ КОНТЕЙНЕРА";
@@ -267,7 +267,7 @@ namespace FastCustom
                 Logger logger = LogManager.GetLogger("fileLogger");
 
                 //add custom message and pass in the exception
-                logger.Error(e, "My Lord, your code is like a shit!");
+                logger.Error(e, "Need fix some problems!");
             }
             #endregion
         }

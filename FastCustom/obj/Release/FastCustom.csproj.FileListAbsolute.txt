@@ -12,4 +12,4 @@ C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Releas
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Release\FastCustom.pdb
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Release\NLog.dll
 C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Release\NLog.xml
-C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\obj\Release\FastCustom.csprojResolveAssemblyReference.cache
+C:\Users\a.rudich\Documents\GitHub\console-status-cheacker\FastCustom\bin\Release\NLog.config
