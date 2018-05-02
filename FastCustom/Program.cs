@@ -258,7 +258,7 @@ namespace FastCustom
                     {
                         pr.Kill();
                     }
-                    if (pr.ProcessName == "FastCustom")
+                    else if (pr.ProcessName == "FastCustom")
                     {
                         pr.Kill();
                     }
