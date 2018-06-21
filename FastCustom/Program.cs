@@ -27,30 +27,25 @@ namespace FastCustom
         {
             #region kill any Excel process
             Process[] prs = Process.GetProcesses();
-            foreach (Process pr in prs)
-            {
-                if (pr.ProcessName == "EXCEL")
-                {
-                    pr.Kill();
-                }
-            }
+     
             #endregion
             try
             {
                 // Create a new FileSystemWatcher and set its properties.
                 FileSystemWatcher watcher = new FileSystemWatcher();
-                watcher.Path = ConfigurationSettings.AppSettings["RootFolder"];
+                watcher.Path = ConfigurationManager.AppSettings["RootFolder"];
                 /* Watch for changes in LastAccess and LastWrite times, and
                    the renaming of files or directories. */
                 watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                    | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-                // Only watch text files.
+                // Only watch xls files.
                 watcher.Filter = "*.xls*";
                 // Add event handlers.
 
                 // Begin watching.
                 watcher.EnableRaisingEvents = true;
-                foreach (string file in Directory.EnumerateFiles(ConfigurationSettings.AppSettings["RootFolder"], "*.xls"))
+                #region open and work with excel file
+                foreach (string file in Directory.EnumerateFiles(ConfigurationManager.AppSettings["RootFolder"], "*.xls"))
                 {
                     Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
                     Microsoft.Office.Interop.Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(file);
@@ -91,121 +86,142 @@ namespace FastCustom
                     }
                     for (int i = 0; i < vagonsList.Count; i++)
                     {
-                        int list = vagonsList.Count;
-                        var container = vagonsList[i];
-                        if (vagonsList != null)
+                        try
                         {
-                            File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000", string.Format("(:217 0:1680 {0}:)", container));
-                            Console.WriteLine("Now processing: {0}", container);
-                            System.Threading.Thread.Sleep(9500);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                        string answerFileName = "01" + 11 /*15й порт Левитан, 11 мой*/ + "2400"; 
-                        DirectoryInfo dirConcentratorPath = new DirectoryInfo(ConfigurationManager.AppSettings["answerFolder"]);
-                        FileInfo[] fileInDir = dirConcentratorPath.GetFiles(answerFileName + "*.*");
-                        foreach (FileInfo foundFile in fileInDir)
-                        {
-                            string fullName = foundFile.FullName;
-                            var lines = File.ReadAllLines(foundFile.FullName, Encoding.GetEncoding(866));
-                            sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
-                            string text = ""; // search key variable
-                            using (StreamReader sr = new StreamReader(foundFile.FullName, Encoding.GetEncoding(866)))
+                            int list = vagonsList.Count;
+                            var container = vagonsList[i];
+                            if (vagonsList != null)
                             {
-                                text = sr.ReadToEnd();
-                                Regex regexNoInfo = new Regex("[Н][Е][Т]\\s[А-Я]{10}");
-                                foreach (var line in lines)
+                                Console.WriteLine($"Start processing file {inputFileName}.");
+                                File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000", string.Format("(:217 0:1680 {0}:)", container));
+                                Console.WriteLine($"Now processing: {container}");
+                                System.Threading.Thread.Sleep(9900);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            string answerFileName = "01" + 11 /*15й порт Левитан, 11 мой*/ + "2400";
+                            DirectoryInfo dirConcentratorPath = new DirectoryInfo(ConfigurationManager.AppSettings["answerFolder"]);
+                            FileInfo[] fileInDir = dirConcentratorPath.GetFiles(answerFileName + "*.*");
+                            foreach (FileInfo foundFile in fileInDir)
+                            {
+                                string fullName = foundFile.FullName;
+                                var lines = File.ReadAllLines(foundFile.FullName, Encoding.GetEncoding(866));
+                                sheet.get_Range("E2", string.Format("E{0}", vagonsList.Count)).NumberFormat = "@";
+                                string text = ""; // search key variable
+                                using (StreamReader sr = new StreamReader(foundFile.FullName, Encoding.GetEncoding(866)))
                                 {
-                                    var NoInfoMatches = regexNoInfo.Matches(line);
-                                    if (NoInfoMatches.Count > 0)
+                                    text = sr.ReadToEnd();
+                                    Regex regexNoInfo = new Regex("[Н][Е][Т]\\s[А-Я]{10}");
+                                    foreach (var line in lines)
                                     {
-                                        var res = NoInfoMatches[0].Value;
-                                        string noinfo = "-";
-                                        sheet.Cells[i + 2, 1].Value = container;
-                                        sheet.Cells[i + 2, 2].Value = noinfo;
-                                        sheet.Cells[i + 2, 3].Value = noinfo;
-                                        sheet.Cells[i + 2, 4].Value = noinfo;
-                                        sheet.Cells[i + 2, 5].Value = noinfo;
-                                        sheet.Cells[i + 2, 6].Value = noinfo;
-                                        sheet.Cells[i + 2, 7].Value = noinfo;
-                                        sheet.Cells[i + 2, 8].Value = noinfo;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                }
-                                Regex regexOkInfo = new Regex(@"([О][П][Е][Р][А][Ц][И][И]\s[С]\s[К])");
-                                foreach (var line in lines)
-                                {
-                                    var okInfoMatches = regexOkInfo.Matches(line);
-                                    if (okInfoMatches.Count > 0)
-                                    {
-                                        string tempAnswer = lines[lines.Length - 4];
-                                        #region using regular expression
-                                        string pattern = @"([A-Я]{4})|([А-Я]{3}.)|(\d\d[.]\d\d[.]\d\d)|([А-Я]{3}.)|(\d{2}[-]\d{2})|(\d{8})|(\d{6}?)";
-                                        Regex rgx = new Regex(pattern);
-                                        MatchCollection matchList = Regex.Matches(tempAnswer, pattern);
-                                        var results = matchList.Cast<Match>().Select(match => match.Value).ToList();
-                                        var station = matchList[0].Value;
-                                        var operation = matchList[1].Value;
-                                        var dt = matchList[2].Value;
-                                        DateTime dateOfOperation = Convert.ToDateTime(dt);
-                                        string timeOfOperation = matchList[3].Value;
-                                        var state = matchList[4].Value;
-                                        if (results.Count == 5)
+                                        var NoInfoMatches = regexNoInfo.Matches(line);
+                                        if (NoInfoMatches.Count > 0)
                                         {
-                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
-                                            sheet.Cells[i + 2, 2].Value = station;
-                                            sheet.Cells[i + 2, 3].Value = operation;
-                                            sheet.Cells[i + 2, 4].Value = dateOfOperation;
-                                            sheet.Cells[i + 2, 5].Value = timeOfOperation;
-                                            sheet.Cells[i + 2, 6].Value = state;
+                                            var res = NoInfoMatches[0].Value;
                                             string noinfo = "-";
+                                            sheet.Cells[i + 2, 1].Value = container;
+                                            sheet.Cells[i + 2, 2].Value = noinfo;
+                                            sheet.Cells[i + 2, 3].Value = noinfo;
+                                            sheet.Cells[i + 2, 4].Value = noinfo;
+                                            sheet.Cells[i + 2, 5].Value = noinfo;
+                                            sheet.Cells[i + 2, 6].Value = noinfo;
                                             sheet.Cells[i + 2, 7].Value = noinfo;
                                             sheet.Cells[i + 2, 8].Value = noinfo;
-                                        }
-
-                                        else if (results.Count == 6)
-                                        {
-                                            var otpravka = matchList[5].Value;
-                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
-                                            sheet.Cells[i + 2, 2].Value = station;
-                                            sheet.Cells[i + 2, 3].Value = operation;
-                                            sheet.Cells[i + 2, 4].Value = dateOfOperation;
-                                            sheet.Cells[i + 2, 5].Value = timeOfOperation;
-                                            sheet.Cells[i + 2, 6].Value = state;
-                                            sheet.Cells[i + 2, 7].Value = otpravka;
-                                            string noinfo = "-";
-                                            sheet.Cells[i + 2, 8].Value = noinfo;
+                                            break;
                                         }
                                         else
                                         {
-                                            var otpravka = matchList[5].Value;
-                                            var vagon = matchList[6].Value;
-                                            #endregion
-                                            sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
-                                            sheet.Cells[i + 2, 2].Value = station;
-                                            sheet.Cells[i + 2, 3].Value = operation;
-                                            sheet.Cells[i + 2, 4].Value = dateOfOperation;
-                                            sheet.Cells[i + 2, 5].Value = timeOfOperation;
-                                            sheet.Cells[i + 2, 6].Value = state;
-                                            sheet.Cells[i + 2, 7].Value = otpravka;
-                                            sheet.Cells[i + 2, 8].Value = vagon;
+                                            continue;
                                         }
                                     }
-                                    else
+                                    Regex regexOkInfo = new Regex(@"([О][П][Е][Р][А][Ц][И][И]\s[С]\s[К])");
+                                    foreach (var line in lines)
                                     {
-                                        continue;
+                                        var okInfoMatches = regexOkInfo.Matches(line);
+                                        if (okInfoMatches.Count > 0)
+                                        {
+                                            string tempAnswer = lines[lines.Length - 4];
+                                            #region using regular expression
+                                            string pattern = @"([A-Я]{4})|([А-Я]{3}.)|(\d\d[.]\d\d[.]\d\d)|([А-Я]{3}.)|(\d{2}[-]\d{2})|(\d{8})|(\d{6}?)";
+                                            Regex rgx = new Regex(pattern);
+                                            MatchCollection matchList = Regex.Matches(tempAnswer, pattern);
+                                            var results = matchList.Cast<Match>().Select(match => match.Value).ToList();
+                                            var station = matchList[0].Value;
+                                            var operation = matchList[1].Value;
+                                            var dt = matchList[2].Value;
+                                            DateTime dateOfOperation = Convert.ToDateTime(dt);
+                                            string timeOfOperation = matchList[3].Value;
+                                            var state = matchList[4].Value;
+                                            if (results.Count == 5)
+                                            {
+                                                sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
+                                                sheet.Cells[i + 2, 2].Value = station;
+                                                sheet.Cells[i + 2, 3].Value = operation;
+                                                sheet.Cells[i + 2, 4].Value = dateOfOperation;
+                                                sheet.Cells[i + 2, 5].Value = timeOfOperation;
+                                                sheet.Cells[i + 2, 6].Value = state;
+                                                string noinfo = "-";
+                                                sheet.Cells[i + 2, 7].Value = noinfo;
+                                                sheet.Cells[i + 2, 8].Value = noinfo;
+                                            }
+
+                                            else if (results.Count == 6)
+                                            {
+                                                var otpravka = matchList[5].Value;
+                                                sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
+                                                sheet.Cells[i + 2, 2].Value = station;
+                                                sheet.Cells[i + 2, 3].Value = operation;
+                                                sheet.Cells[i + 2, 4].Value = dateOfOperation;
+                                                sheet.Cells[i + 2, 5].Value = timeOfOperation;
+                                                sheet.Cells[i + 2, 6].Value = state;
+                                                sheet.Cells[i + 2, 7].Value = otpravka;
+                                                string noinfo = "-";
+                                                sheet.Cells[i + 2, 8].Value = noinfo;
+                                            }
+                                            else
+                                            {
+                                                var otpravka = matchList[5].Value;
+                                                var vagon = matchList[6].Value;
+                                                #endregion
+                                                sheet.Cells[i + 2, 1].Value = container; //get ontainer name in column
+                                                sheet.Cells[i + 2, 2].Value = station;
+                                                sheet.Cells[i + 2, 3].Value = operation;
+                                                sheet.Cells[i + 2, 4].Value = dateOfOperation;
+                                                sheet.Cells[i + 2, 5].Value = timeOfOperation;
+                                                sheet.Cells[i + 2, 6].Value = state;
+                                                sheet.Cells[i + 2, 7].Value = otpravka;
+                                                sheet.Cells[i + 2, 8].Value = vagon;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
                                     }
                                 }
+                                File.Delete(foundFile.FullName);
                             }
-                            File.Delete(foundFile.FullName);
+                        }
+                        catch (Exception e)
+                        {
+                            foreach (Process pr in prs)
+                            {
+                                if (pr.ProcessName == "EXCEL" && pr.ProcessName == "FastCustom")
+                                {
+                                    pr.Kill();
+                                }
+
+                            }
+                            //this will use the "fileLogger" logger from our NLog.config file
+                            Logger logger = LogManager.GetLogger("fileLogger");
+
+                            //add custom message and pass in the exception
+                            logger.Error(e, "Need fix some problems!");
                         }
                     }
+                    #endregion  
                     #region Formatting excel
                     var formatTable = vagonsList.Count + 1; // fix applying formatting for last string
                     sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = 
@@ -224,11 +240,17 @@ namespace FastCustom
                         workbook.SaveAs(ConfigurationManager.AppSettings["reportFolder"] + reportName + ".xlsx");
                         excel.Workbooks.Close();
                         excel.Quit();
-                        Console.WriteLine("Processing file {0} is completed.", inputFileName);
+                        Console.WriteLine($"Processing file {inputFileName} is completed.");
                     }
                     catch (System.Runtime.InteropServices.COMException)
                     {
-                        //errors with saving
+                        foreach (Process pr in prs)
+                        {
+                            if (pr.ProcessName == "EXCEL")
+                            {
+                                pr.Kill();
+                            }
+                        }
                     }
                     //release com objects to fully kill excel process from running in the background
                     Marshal.ReleaseComObject(xlRange);
@@ -254,14 +276,11 @@ namespace FastCustom
             {
                 foreach (Process pr in prs)
                 {
-                    if (pr.ProcessName == "EXCEL")
+                    if (pr.ProcessName == "EXCEL" && pr.ProcessName == "FastCustom")
                     {
                         pr.Kill();
                     }
-                    else if (pr.ProcessName == "FastCustom")
-                    {
-                        pr.Kill();
-                    }
+
                 }
                 //this will use the "fileLogger" logger from our NLog.config file
                 Logger logger = LogManager.GetLogger("fileLogger");
@@ -269,7 +288,9 @@ namespace FastCustom
                 //add custom message and pass in the exception
                 logger.Error(e, "Need fix some problems!");
             }
+
             #endregion
+
         }
     }
 }
