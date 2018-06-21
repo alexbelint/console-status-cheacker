@@ -27,7 +27,14 @@ namespace FastCustom
         {
             #region kill any Excel process
             Process[] prs = Process.GetProcesses();
-     
+            foreach (Process pr in prs)
+            {
+                if (pr.ProcessName == "EXCEL" )
+                {
+                    pr.Kill();
+                }
+            }
+
             #endregion
             try
             {
@@ -84,6 +91,10 @@ namespace FastCustom
                                     vagonsList.Add(xlRange.Cells[i, j].Value2.ToString());
                         }
                     }
+                    ConsoleColor color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine($"Start processing file {inputFileName}.");
+                    Console.ForegroundColor = color;
                     for (int i = 0; i < vagonsList.Count; i++)
                     {
                         try
@@ -92,7 +103,7 @@ namespace FastCustom
                             var container = vagonsList[i];
                             if (vagonsList != null)
                             {
-                                Console.WriteLine($"Start processing file {inputFileName}.");
+                                //Console.WriteLine($"Start processing file {inputFileName}.");
                                 File.WriteAllText(ConfigurationManager.AppSettings["querryFolder"] + "01" + 11 + "000" + ".000", string.Format("(:217 0:1680 {0}:)", container));
                                 Console.WriteLine($"Now processing: {container}");
                                 System.Threading.Thread.Sleep(9900);
@@ -240,7 +251,9 @@ namespace FastCustom
                         workbook.SaveAs(ConfigurationManager.AppSettings["reportFolder"] + reportName + ".xlsx");
                         excel.Workbooks.Close();
                         excel.Quit();
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
                         Console.WriteLine($"Processing file {inputFileName} is completed.");
+                        Console.ForegroundColor = color;
                     }
                     catch (System.Runtime.InteropServices.COMException)
                     {
