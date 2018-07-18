@@ -25,7 +25,7 @@ namespace FastCustom
 
         public static void Run()
         {
-            #region kill any Excel process
+            #region kill any Excel process before run the app
             Process[] prs = Process.GetProcesses();
             foreach (Process pr in prs)
             {
@@ -41,10 +41,9 @@ namespace FastCustom
                 // Create a new FileSystemWatcher and set its properties.
                 FileSystemWatcher watcher = new FileSystemWatcher();
                 watcher.Path = ConfigurationManager.AppSettings["RootFolder"];
-                /* Watch for changes in LastAccess and LastWrite times, and
-                   the renaming of files or directories. */
+                /* Watch for changes in LastAccess and LastWrite times, and the renaming of files or directories. */
                 watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                   | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                    | NotifyFilters.FileName | NotifyFilters.DirectoryName;
                 // Only watch xls files.
                 watcher.Filter = "*.xls*";
                 // Add event handlers.
@@ -70,7 +69,7 @@ namespace FastCustom
                     excel.Workbooks.Add(Type.Missing); //add workbook
                     excel.SheetsInNewWorkbook = 1;//number of pages in workbook
                     Microsoft.Office.Interop.Excel.Workbook workbook = excel.Workbooks[1]; //get link on 1st book
-                    Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Worksheets.get_Item(1);//получаем ссылку на первый лист
+                    Microsoft.Office.Interop.Excel.Worksheet sheet = workbook.Worksheets.get_Item(1);//get link on 1st page
                     sheet.Name = "Report" + " " + DateTime.Now.ToString("dd.MM.yy");
                     sheet.Cells[1, 1] = "№ КОНТЕЙНЕРА";
                     sheet.Cells[1, 2] = "СТАНЦ";
@@ -154,7 +153,6 @@ namespace FastCustom
                                         if (okInfoMatches.Count > 0)
                                         {
                                             string tempAnswer = lines[lines.Length - 4];
-                                            #region using regular expression
                                             string pattern = @"([A-Я]{4})|([А-Я]{3}.)|(\d\d[.]\d\d[.]\d\d)|([А-Я]{3}.)|(\d{2}[-]\d{2})|(\d{8})|(\d{6}?)";
                                             Regex rgx = new Regex(pattern);
                                             MatchCollection matchList = Regex.Matches(tempAnswer, pattern);
@@ -232,7 +230,7 @@ namespace FastCustom
                             logger.Error(e, "Need fix some problems!");
                         }
                     }
-                    #endregion  
+                   
                     #region Formatting excel
                     var formatTable = vagonsList.Count + 1; // fix applying formatting for last string
                     sheet.get_Range("B1", string.Format("H{0}", formatTable)).Cells.HorizontalAlignment = 
